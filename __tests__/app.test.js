@@ -5,7 +5,7 @@ const request = require("supertest");
 const app = require("../app");
 
 afterAll(() => {
-  return db.end();
+  db.end();
 });
 beforeEach(() => seed(testData));
 
