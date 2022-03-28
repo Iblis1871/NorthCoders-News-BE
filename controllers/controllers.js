@@ -1,4 +1,4 @@
-const { newsTopics, newsArticles } = require("../models/models");
+const { newsTopics, newsArticles, articlesPatch } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
   newsTopics()
@@ -18,4 +18,14 @@ exports.getArticleById = (req, res, next) => {
       res.status(200).json({ articles });
     })
     .catch(next);
+};
+
+exports.patchArticleById = async (req, res, next) => {
+  try {
+    const { article_id } = req.params;
+    articlesPatch(article_id, req.body);
+    res.status(202).json({ articles });
+  } catch (err) {
+    next(err);
+  }
 };
