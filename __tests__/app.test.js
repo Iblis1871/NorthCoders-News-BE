@@ -9,25 +9,25 @@ afterAll(() => {
 });
 beforeEach(() => seed(testData));
 
-describe("GET REQUEST TESTING", () => {
-  test("status:200, responds with an array of topics", () => {
-    return request(app)
-      .get("/api/topics")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.topics).toBeInstanceOf(Array);
-      });
+describe("GET api/topics", () => {
+  test("status:200, responds with an array of topics", async () => {
+    const res = await request(app).get("/api/topics").expect(200);
+    expect(res.body.topics).toBeInstanceOf(Array);
   });
 });
-
-describe("ERROR TESTING", () => {
-  test("status:404, path not found", () => {
-    return request(app)
-      .get("/api/top")
-      .expect(404)
-      .then((res) => {
-        console.log(res.body);
-        expect(res.body.msg).toBe("path not found!");
-      });
+describe("GET api/articles", () => {
+  test("status:200, responds with an article based on article ID", async () => {
+    const res = await request(app).get("/api/articles/1").expect(200);
+    expect(res.body.articles).toBeInstanceOf(Object);
+    expect(res.body.articles.title).toBe("Living in the shadow of a great man");
+    expect(res.body.articles.topic).toBe("mitch");
+    expect(res.body.articles.created_at).toBe("2020-07-09T20:11:00.000Z");
+    expect(res.body.articles.body).toBe("I find this existence challenging");
+    expect(res.body.articles.votes).toBe(100);
+  });
+  test("status:200, responds with an article based on article ID + properties from joined table", async () => {
+    const res = await request(app).get("/api/articles/1").expect(200);
+    expect(res.body.articles).toBeInstanceOf(Object);
+    expect(res.body.articles.author).toBe("butter_bridge");
   });
 });
