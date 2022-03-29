@@ -1,4 +1,4 @@
-const { query } = require("../db/connection");
+const { patchArticleById } = require("../controllers/controllers");
 const db = require("../db/connection");
 const articles = require("../db/data/test-data/articles");
 
@@ -27,18 +27,18 @@ exports.newsArticles = async (article_id) => {
     });
 };
 
-exports.articlesPatch = async (inc_votes) => {
-  const { votes } = inc_votes;
-  const results = await db.query(
-    `
+exports.articlesPatch = (article_id, article) => {
+  const { inc_votes } = article;
+  return db
+    .query(
+      `
       UPDATE articles
-      SET votes =$1
+      SET votes = votes +$1
       WHERE article_id = $2
       RETURNING *;`,
-    [votes, articles_id]
-  );
-  if (results.rows.length === 0) {
-    return Promise.reject({ status: 404, msg: " path not found!" });
-  }
-  return results.rows[0];
+      [inc_votes, article_id]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
 };

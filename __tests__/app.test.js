@@ -31,3 +31,39 @@ describe("GET api/articles", () => {
     expect(res.body.articles.author).toBe("butter_bridge");
   });
 });
+describe("PATCH api/articles", () => {
+  test("status:202, responds with an updated article object INCREASE VOTE", async () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .expect(202)
+      .send({ inc_votes: 1 })
+      .then((res) => {
+        expect(res.body.article).toEqual({
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 101,
+          article_id: 1,
+        });
+      });
+  });
+  test("status:202, responds with an updated article object DECREASE VOTE", async () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .expect(202)
+      .send({ inc_votes: -100 })
+      .then((res) => {
+        expect(res.body.article).toEqual({
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 0,
+          article_id: 1,
+        });
+      });
+  });
+});

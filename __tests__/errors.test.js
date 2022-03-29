@@ -23,4 +23,24 @@ describe("ERROR TESTING", () => {
         expect(res.body.msg).toBe("bad request!");
       });
   });
+  test("status:400, responds with a bad request ID DOES NOT EXIST", () => {
+    return request(app)
+      .patch("/api/articles/999")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then((res) => {
+        expect(res.statusCode).toBe(400);
+        expect(res.body.msg).toBe("bad request!");
+      });
+  });
+  test("status:404, responds with an invalid invalid path", () => {
+    return request(app)
+      .patch("/api/art")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then((res) => {
+        expect(res.statusCode).toBe(404);
+        expect(res.body.msg).toBe("path not found!");
+      });
+  });
 });
