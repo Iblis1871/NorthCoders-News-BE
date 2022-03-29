@@ -10,7 +10,7 @@ exports.newsTopics = async () => {
   );
   return results.rows;
 };
-exports.newsArticles = async (article_id) => {
+exports.newsArticles = (article_id) => {
   return db
     .query(
       `

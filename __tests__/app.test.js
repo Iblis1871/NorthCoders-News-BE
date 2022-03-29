@@ -32,10 +32,10 @@ describe("GET api/articles", () => {
   });
 });
 describe("PATCH api/articles", () => {
-  test("status:202, responds with an updated article object INCREASE VOTE", async () => {
+  test("status:200, responds with an updated article object INCREASE VOTE", async () => {
     return request(app)
       .patch("/api/articles/1")
-      .expect(202)
+      .expect(200)
       .send({ inc_votes: 1 })
       .then((res) => {
         expect(res.body.article).toEqual({
@@ -49,10 +49,10 @@ describe("PATCH api/articles", () => {
         });
       });
   });
-  test("status:202, responds with an updated article object DECREASE VOTE", async () => {
+  test("status:200, responds with an updated article object DECREASE VOTE", async () => {
     return request(app)
       .patch("/api/articles/1")
-      .expect(202)
+      .expect(200)
       .send({ inc_votes: -100 })
       .then((res) => {
         expect(res.body.article).toEqual({
