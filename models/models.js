@@ -29,9 +29,6 @@ exports.newsArticles = (article_id) => {
 
 exports.articlesPatch = (article_id, article) => {
   const { inc_votes } = article;
-  if (article === undefined) {
-    return Promise.reject({ status: 404, msg: "path not found!" });
-  }
   return db
     .query(
       `
@@ -42,6 +39,31 @@ exports.articlesPatch = (article_id, article) => {
       [inc_votes, article_id]
     )
     .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "path not found!",
+        });
+      }
       return result.rows[0];
     });
 };
+
+// exports.updateTreasures = (treasure_id, edditedTreasure) => {
+//   const { cost_at_auction } = edditedTreasure;
+//   return db
+//     .query(
+//       `UPDATE treasures SET cost_at_auction = $1
+//   WHERE treasure_id = $2 RETURNING *;`,
+//       [cost_at_auction, treasure_id]
+//     )
+//     .then((result) => {
+//       if (result.rows.length === 0) {
+//         return Promise.reject({
+//           status: 404,
+//           msg: `No Treasure found at treasure_id: ${treasure_id}`,
+//         });
+//       }
+//       return result.rows[0];
+//     });
+// };

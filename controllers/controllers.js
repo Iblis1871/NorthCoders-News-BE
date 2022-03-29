@@ -21,13 +21,10 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
-exports.patchArticleById = async (req, res, next) => {
+exports.patchArticleById = (req, res, next) => {
   const { article_id } = req.params;
   articlesPatch(article_id, req.body)
     .then((article) => {
-      if (article_id >= 99) {
-        res.status(404).send({ msg: "path not found!" });
-      }
       res.status(200).send({ article });
     })
     .catch(next);
