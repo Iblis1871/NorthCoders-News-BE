@@ -29,6 +29,9 @@ exports.newsArticles = (article_id) => {
 
 exports.articlesPatch = (article_id, article) => {
   const { inc_votes } = article;
+  if (article === undefined) {
+    return Promise.reject({ status: 404, msg: "path not found!" });
+  }
   return db
     .query(
       `

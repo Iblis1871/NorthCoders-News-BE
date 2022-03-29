@@ -28,9 +28,6 @@ exports.patchArticleById = async (req, res, next) => {
       if (article_id >= 99) {
         res.status(404).send({ msg: "path not found!" });
       }
-      if (article_id === String) {
-        res.send(400).send({ msg: "bad request!" });
-      }
       res.status(200).send({ article });
     })
     .catch(next);

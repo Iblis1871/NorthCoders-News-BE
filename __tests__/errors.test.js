@@ -25,7 +25,7 @@ describe("ERROR TESTING", () => {
   });
   test("status:404, responds with a path not found ID DOES NOT EXIST", () => {
     return request(app)
-      .patch("/api/articles/999")
+      .patch("/api/articles/")
       .send({ inc_votes: 1 })
       .expect(404)
       .then((res) => {
