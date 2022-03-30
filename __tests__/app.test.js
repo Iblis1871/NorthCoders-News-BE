@@ -31,3 +31,46 @@ describe("GET api/articles", () => {
     expect(res.body.articles.author).toBe("butter_bridge");
   });
 });
+describe("PATCH api/articles", () => {
+  test("status:200, responds with an updated article object INCREASE VOTE", async () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .expect(200)
+      .send({ inc_votes: 1 })
+      .then((res) => {
+        expect(res.body.article).toEqual({
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 101,
+          article_id: 1,
+        });
+      });
+  });
+  test("status:200, responds with an updated article object DECREASE VOTE", async () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .expect(200)
+      .send({ inc_votes: -100 })
+      .then((res) => {
+        expect(res.body.article).toEqual({
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 0,
+          article_id: 1,
+        });
+      });
+  });
+});
+describe("GET api/users", () => {
+  test("status:200, responds with an array of users with usernames", async () => {
+    const res = await request(app).get("/api/users").expect(200);
+    expect(res.body.users).toBeInstanceOf(Array);
+    expect(res.body.users[0].username).toBe("butter_bridge");
+  });
+});
