@@ -1,2 +1,5 @@
-`
-select * FROM articles;`
+\c nc_news_test
+
+"SELECT * FROM comments"
+
+\d

@@ -65,21 +65,21 @@ describe("GET api/articles/:article_id/comments", () => {
         });
       });
   });
-});
-test("status:200, responds the comments for a given article_id, TWO", () => {
-  return request(app)
-    .get("/api/articles/5/comments")
-    .expect(200)
-    .then((res) => {
-      expect(res.body.articles).toEqual({
-        comment_id: 14,
-        body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
-        article_id: 5,
-        author: "icellusedkars",
-        votes: 16,
-        created_at: "2020-06-09T05:00:00.000Z",
+  test("status:200, responds the comments for a given article_id, TWO", () => {
+    return request(app)
+      .get("/api/articles/5/comments")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles).toEqual({
+          comment_id: 14,
+          body: "What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.",
+          article_id: 5,
+          author: "icellusedkars",
+          votes: 16,
+          created_at: "2020-06-09T05:00:00.000Z",
+        });
       });
-    });
+  });
 });
 
 describe("PATCH api/articles", () => {
@@ -116,6 +116,34 @@ describe("PATCH api/articles", () => {
           article_id: 1,
         });
       });
+  });
+});
+describe("POST /api/articles/:article_id/comments", () => {
+  test("status:200, responds with a added comment ONE", async () => {
+    const path = "/api/articles/1/comments";
+    const { body } = await request(app)
+      .post(path)
+      .send({ username: "butter_bridge", body: "posting new comment" })
+      .expect(201);
+    expect(body.comment).toEqual(
+      expect.objectContaining({
+        author: "butter_bridge",
+        body: "posting new comment",
+      })
+    );
+  });
+  test("status:200, responds with a added comment NINE", async () => {
+    const path = "/api/articles/9/comments";
+    const { body } = await request(app)
+      .post(path)
+      .send({ username: "icellusedkars", body: "posting morecomment" })
+      .expect(201);
+    expect(body.comment).toEqual(
+      expect.objectContaining({
+        author: "icellusedkars",
+        body: "posting morecomment",
+      })
+    );
   });
 });
 describe("GET api/users", () => {
@@ -214,6 +242,15 @@ describe("ERROR TESTING COMMENTS", () => {
       .then((res) => {
         console.log(res.body);
         expect(res.body.msg).toBe("path not found!");
+      });
+  });
+  test("status:404, should return 400 given an empty object", () => {
+    return request(app)
+      .post("/api/articles/9/comments")
+      .send({})
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request!");
       });
   });
 });
