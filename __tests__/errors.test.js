@@ -4,7 +4,7 @@ const db = require("../db/connection");
 const request = require("supertest");
 const app = require("../app");
 
-describe("ERROR TESTING", () => {
+describe("ERROR TESTING ARTICLES", () => {
   test("status:404, path not found", () => {
     return request(app)
       .get("/api/top")
@@ -41,6 +41,17 @@ describe("ERROR TESTING", () => {
       .then((res) => {
         expect(res.statusCode).toBe(400);
         expect(res.body.msg).toBe("bad request!");
+      });
+  });
+});
+describe("ERROR TESTING USERS", () => {
+  test("status:404, path not found", () => {
+    return request(app)
+      .get("/api/use")
+      .expect(404)
+      .then((res) => {
+        console.log(res.body);
+        expect(res.body.msg).toBe("path not found!");
       });
   });
 });
