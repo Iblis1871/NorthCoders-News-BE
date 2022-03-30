@@ -67,3 +67,10 @@ describe("PATCH api/articles", () => {
       });
   });
 });
+describe("GET api/users", () => {
+  test("status:200, responds with an array of users with usernames", async () => {
+    const res = await request(app).get("/api/users").expect(200);
+    expect(res.body.users).toBeInstanceOf(Array);
+    expect(res.body.users[0].username).toBe("butter_bridge");
+  });
+});

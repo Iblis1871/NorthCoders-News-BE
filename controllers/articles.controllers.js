@@ -1,5 +1,5 @@
 const articles = require("../db/data/test-data/articles");
-const { newsTopics, newsArticles, articlesPatch } = require("../models/models");
+const { newsTopics, newsArticles, articlesPatch } = require("../models/articles.models");
 
 exports.getTopics = (req, res, next) => {
   newsTopics()

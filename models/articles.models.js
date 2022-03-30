@@ -1,4 +1,4 @@
-const { patchArticleById } = require("../controllers/controllers");
+const { patchArticleById } = require("../controllers/articles.controllers");
 const db = require("../db/connection");
 const articles = require("../db/data/test-data/articles");
 
@@ -6,7 +6,7 @@ exports.newsTopics = async () => {
   const results = await db.query(
     `
     SELECT * 
-    FROM topics`
+    FROM topics;`
   );
   return results.rows;
 };
@@ -48,22 +48,3 @@ exports.articlesPatch = (article_id, article) => {
       return result.rows[0];
     });
 };
-
-// exports.updateTreasures = (treasure_id, edditedTreasure) => {
-//   const { cost_at_auction } = edditedTreasure;
-//   return db
-//     .query(
-//       `UPDATE treasures SET cost_at_auction = $1
-//   WHERE treasure_id = $2 RETURNING *;`,
-//       [cost_at_auction, treasure_id]
-//     )
-//     .then((result) => {
-//       if (result.rows.length === 0) {
-//         return Promise.reject({
-//           status: 404,
-//           msg: `No Treasure found at treasure_id: ${treasure_id}`,
-//         });
-//       }
-//       return result.rows[0];
-//     });
-// };
