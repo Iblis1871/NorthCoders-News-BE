@@ -21,9 +21,11 @@ exports.postCommentsById = (req, res, next) => {
     .catch(next);
 };
 
-exports.deleteComment = (req, res) => {
+exports.deleteComment = (req, res, next) => {
   const { comment_id } = req.params;
-  commentsDelete(comment_id).then(() => {
-    res.status(204).send();
-  });
+  commentsDelete(comment_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(next);
 };
