@@ -39,6 +39,5 @@ exports.commentsDelete = (comment_id) => {
           msg: "not found!",
         });
       }
-      return results.rows;
     });
 };
