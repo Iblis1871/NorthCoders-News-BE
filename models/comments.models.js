@@ -6,10 +6,10 @@ exports.newsComments = async (article_id) => {
     `SELECT * FROM comments WHERE article_id = $1`,
     [article_id]
   );
-  return comments.rows[0];
+  return comments.rows;
 };
 
-exports.commentsPost = async (articleID, reqBody) => {
+exports.commentsPost = async (article_id, reqBody) => {
   const { username, body } = reqBody;
 
   const results = await db.query(
@@ -18,7 +18,7 @@ exports.commentsPost = async (articleID, reqBody) => {
   VALUES ($1, $2, $3) 
   RETURNING *;
   `,
-    [username, body, articleID]
+    [username, body, article_id]
   );
   return results.rows[0];
 };
