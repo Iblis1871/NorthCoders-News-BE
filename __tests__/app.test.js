@@ -66,6 +66,13 @@ describe("GET api/articles/:article_id/comments", () => {
   });
 });
 
+describe("DELETE /api/comments/:comment_id", () => {
+  test("status:204 deletes a comment by id", async () => {
+    const res = await request(app).delete("/api/comments/1").expect(204);
+    expect(res.statusCode).toBe(204);
+  });
+});
+
 describe("PATCH api/articles", () => {
   test("status:200, responds with an updated article object INCREASE VOTE", async () => {
     return request(app)

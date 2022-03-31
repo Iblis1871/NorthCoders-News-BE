@@ -22,3 +22,11 @@ exports.commentsPost = async (article_id, reqBody) => {
   );
   return results.rows[0];
 };
+
+exports.commentsDelete = (comment_id) => {
+  return db
+    .query("DELETE FROM comments WHERE comment_id = $1", [comment_id])
+    .then(() => {
+      return;
+    });
+};

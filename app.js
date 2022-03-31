@@ -8,6 +8,7 @@ const { getUsers } = require("./controllers/users.controllers");
 const {
   getCommentsById,
   postCommentsById,
+  deleteComment,
 } = require("./controllers/comments.controllers");
 
 const app = express();
@@ -19,6 +20,8 @@ app.get("/api/articles/:article_id/comments", getCommentsById);
 app.patch("/api/articles/:article_id", patchArticleById);
 
 app.post("/api/articles/:article_id/comments", postCommentsById);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.get("/api/users", getUsers);
 

@@ -1,4 +1,8 @@
-const { newsComments, commentsPost } = require("../models/comments.models");
+const {
+  newsComments,
+  commentsPost,
+  commentsDelete,
+} = require("../models/comments.models");
 
 exports.getCommentsById = (req, res, next) => {
   const { article_id } = req.params;
@@ -15,4 +19,11 @@ exports.postCommentsById = (req, res, next) => {
       res.status(201).send({ comment });
     })
     .catch(next);
+};
+
+exports.deleteComment = (req, res) => {
+  const { comment_id } = req.params;
+  commentsDelete(comment_id).then(() => {
+    res.status(204).send();
+  });
 };
