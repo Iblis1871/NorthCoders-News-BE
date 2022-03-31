@@ -66,6 +66,12 @@ describe("GET api/articles/:article_id/comments", () => {
   });
 });
 
+describe("DELETE /api/comments/:comment_id", () => {
+  test("status:204 deletes a comment by id", async () => {
+    const res = await request(app).delete("/api/comments/1").expect(204);
+  });
+});
+
 describe("PATCH api/articles", () => {
   test("status:200, responds with an updated article object INCREASE VOTE", async () => {
     return request(app)
@@ -187,5 +193,13 @@ describe("ERROR TESTING COMMENTS", () => {
       .send({})
       .expect(400);
     expect(res.body.msg).toBe("bad request!");
+  });
+  test("status:400, /api/comments/ invalid input when deleting a comment", async () => {
+    const res = await request(app).delete("/api/comments/notAnId").expect(400);
+    expect(res.body.msg).toBe("bad request!");
+  });
+  test("status:404, /api/comments/ comment_id not found", async () => {
+    const res = await request(app).delete("/api/comments/99999").expect(404);
+    expect(res.body.msg).toBe("not found!");
   });
 });
