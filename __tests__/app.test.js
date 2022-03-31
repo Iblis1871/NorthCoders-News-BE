@@ -61,15 +61,8 @@ describe("GET api/articles/:article_id/comments", () => {
           body: expect.any(String),
         })
       );
+      expect(body.comments).toBeInstanceOf(Array);
     });
-  });
-
-  test("status:200, responds the comments for a given article_id", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/3/comments")
-      .expect(200);
-    const { comments } = body;
-    expect(comments).toBeInstanceOf(Array);
   });
 });
 
@@ -110,7 +103,7 @@ describe("PATCH api/articles", () => {
   });
 });
 describe("POST /api/articles/:article_id/comments", () => {
-  test("status:200, responds with a added comment ONE", async () => {
+  test("status:200, responds with an added comment", async () => {
     const path = "/api/articles/1/comments";
     const { body } = await request(app)
       .post(path)
