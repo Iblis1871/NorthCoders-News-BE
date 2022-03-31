@@ -43,10 +43,9 @@ exports.articlesPatch = (article_id, article) => {
       if (result.rows.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: "path not found!",
+          msg: "not found!",
         });
       }
       return result.rows[0];
     });
 };
-

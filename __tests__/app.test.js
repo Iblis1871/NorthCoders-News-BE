@@ -46,7 +46,7 @@ describe("GET api/articles", () => {
   });
 });
 describe("GET api/articles/:article_id/comments", () => {
-  test("status:200, responds the comments for a given article_id, ONE", async () => {
+  test("status:200, responds the comments for a given article_id", async () => {
     const { body } = await request(app)
       .get("/api/articles/1/comments")
       .expect(200);
@@ -64,7 +64,7 @@ describe("GET api/articles/:article_id/comments", () => {
     });
   });
 
-  test("status:200, responds the comments for a given article_id, ARRAY", async () => {
+  test("status:200, responds the comments for a given article_id", async () => {
     const { body } = await request(app)
       .get("/api/articles/3/comments")
       .expect(200);
@@ -161,24 +161,24 @@ describe("GET api/users", () => {
 ///////////////////////////ERRORS////////////////////////////////////
 ////////////////////////////////////////////ERRORS///////////////////
 
-describe("ERROR TESTING ARTICLES", () => {
-  test("status:404, path not found", async () => {
+describe("ERROR TESTING ARTICLES ", () => {
+  test("status:404, /api/ path not found", async () => {
     const res = await request(app).get("/api/top").expect(404);
-    expect(res.body.msg).toBe("path not found!");
+    expect(res.body.msg).toBe("not found!");
   });
-  test("status:400, bad request", async () => {
+  test("status:400, /api/articles/99l99 bad request", async () => {
     const res = await request(app).get("/api/articles/99l99").expect(400);
     expect(res.body.msg).toBe("bad request!");
   });
-  test("status:404, responds with a path not found ID DOES NOT EXIST", async () => {
+  test("status:404, /api/articles/999 responds with a path not found ID DOES NOT EXIST", async () => {
     const res = await request(app)
       .patch("/api/articles/999")
       .send({ inc_votes: 1 })
       .expect(404);
     expect(res.statusCode).toBe(404);
-    expect(res.body.msg).toBe("path not found!");
+    expect(res.body.msg).toBe("not found!");
   });
-  test("status:400, responds with an invalid invalid path", async () => {
+  test("status:400, /api/articles/someNonsense responds not found as must be integer", async () => {
     const res = await request(app)
       .patch("/api/articles/someNonsense")
       .send({ inc_votes: 1 })
@@ -187,18 +187,8 @@ describe("ERROR TESTING ARTICLES", () => {
     expect(res.body.msg).toBe("bad request!");
   });
 });
-describe("ERROR TESTING USERS", () => {
-  test("status:404, path not found", async () => {
-    const res = await request(app).get("/api/use").expect(404);
-    expect(res.body.msg).toBe("path not found!");
-  });
-});
 describe("ERROR TESTING COMMENTS", () => {
-  test("status:404, path not found", async () => {
-    const res = await request(app).get("/api/articles/1/stnemmoc").expect(404);
-    expect(res.body.msg).toBe("path not found!");
-  });
-  test("status:404, should return 400 given an empty object", async () => {
+  test("status:400, /api/articles/9/comments should return 400 given an empty object", async () => {
     const res = await request(app)
       .post("/api/articles/9/comments")
       .send({})
