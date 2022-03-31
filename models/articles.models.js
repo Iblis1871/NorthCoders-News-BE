@@ -1,4 +1,3 @@
-const { patchArticleById } = require("../controllers/articles.controllers");
 const db = require("../db/connection");
 const articles = require("../db/data/test-data/articles");
 
@@ -10,21 +9,23 @@ exports.newsTopics = async () => {
   );
   return results.rows;
 };
-exports.newsArticles = (article_id) => {
-  return db
-    .query(
-      `
-        SELECT * 
-        FROM articles
-        JOIN users
-        ON articles.author = users.username
-        WHERE article_id = $1;
-        `,
-      [article_id]
-    )
-    .then((results) => {
-      return results.rows[0];
-    });
+
+exports.newsArticles = async (article_id) => {
+  const articleSQLreturn = await db.query(
+    `
+    SELECT articles.*, 
+    COUNT(comments.comment_id) 
+    AS comment_count 
+    FROM articles 
+    JOIN comments 
+    ON comments.article_id = articles.article_id
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id;
+    `,
+    [article_id]
+  );
+  const { rows } = articleSQLreturn;
+  return rows;
 };
 
 exports.articlesPatch = (article_id, article) => {
@@ -42,7 +43,7 @@ exports.articlesPatch = (article_id, article) => {
       if (result.rows.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: "path not found!",
+          msg: "not found!",
         });
       }
       return result.rows[0];

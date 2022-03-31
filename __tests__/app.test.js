@@ -31,7 +31,41 @@ describe("GET api/articles", () => {
     expect(res.body.articles).toBeInstanceOf(Object);
     expect(res.body.articles.author).toBe("butter_bridge");
   });
+  test("status:200, responds with an article and comment count", async () => {
+    const { body } = await request(app).get("/api/articles/1").expect(200);
+    expect(body.articles).toEqual({
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      author: "butter_bridge",
+      body: "I find this existence challenging",
+      created_at: "2020-07-09T20:11:00.000Z",
+      votes: 100,
+      article_id: 1,
+      comment_count: "11",
+    });
+  });
 });
+describe("GET api/articles/:article_id/comments", () => {
+  test("status:200, responds the comments for a given article_id", async () => {
+    const { body } = await request(app)
+      .get("/api/articles/1/comments")
+      .expect(200);
+    const { comments } = body;
+    comments.forEach((result) => {
+      expect(result).toEqual(
+        expect.objectContaining({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+        })
+      );
+      expect(body.comments).toBeInstanceOf(Array);
+    });
+  });
+});
+
 describe("PATCH api/articles", () => {
   test("status:200, responds with an updated article object INCREASE VOTE", async () => {
     return request(app)
@@ -39,7 +73,7 @@ describe("PATCH api/articles", () => {
       .expect(200)
       .send({ inc_votes: 1 })
       .then((res) => {
-        expect(res.body.article).toEqual({
+        expect(res.body.articles).toEqual({
           title: "Living in the shadow of a great man",
           topic: "mitch",
           author: "butter_bridge",
@@ -56,7 +90,7 @@ describe("PATCH api/articles", () => {
       .expect(200)
       .send({ inc_votes: -100 })
       .then((res) => {
-        expect(res.body.article).toEqual({
+        expect(res.body.articles).toEqual({
           title: "Living in the shadow of a great man",
           topic: "mitch",
           author: "butter_bridge",
@@ -66,6 +100,21 @@ describe("PATCH api/articles", () => {
           article_id: 1,
         });
       });
+  });
+});
+describe("POST /api/articles/:article_id/comments", () => {
+  test("status:200, responds with an added comment", async () => {
+    const path = "/api/articles/1/comments";
+    const { body } = await request(app)
+      .post(path)
+      .send({ username: "butter_bridge", body: "posting new comment" })
+      .expect(201);
+    expect(body.comment).toEqual(
+      expect.objectContaining({
+        author: "butter_bridge",
+        body: "posting new comment",
+      })
+    );
   });
 });
 describe("GET api/users", () => {
@@ -100,57 +149,43 @@ describe("GET api/users", () => {
         });
       });
   });
-  ///////////////////////////ERRORS////////////////////////////////////
+});
+////////ERRORS///////////////////////////////////////////////////////
+///////////////////////////ERRORS////////////////////////////////////
+////////////////////////////////////////////ERRORS///////////////////
 
-  describe("ERROR TESTING ARTICLES", () => {
-    test("status:404, path not found", () => {
-      return request(app)
-        .get("/api/top")
-        .expect(404)
-        .then((res) => {
-          console.log(res.body);
-          expect(res.body.msg).toBe("path not found!");
-        });
-    });
-    test("status:400, bad request", () => {
-      return request(app)
-        .get("/api/articles/99l99")
-        .expect(400)
-        .then((res) => {
-          console.log(res.body);
-          expect(res.body.msg).toBe("bad request!");
-        });
-    });
-    test("status:404, responds with a path not found ID DOES NOT EXIST", () => {
-      return request(app)
-        .patch("/api/articles/999")
-        .send({ inc_votes: 1 })
-        .expect(404)
-        .then((res) => {
-          expect(res.statusCode).toBe(404);
-          expect(res.body.msg).toBe("path not found!");
-        });
-    });
-    test("status:400, responds with an invalid invalid path", () => {
-      return request(app)
-        .patch("/api/articles/someNonsense")
-        .send({ inc_votes: 1 })
-        .expect(400)
-        .then((res) => {
-          expect(res.statusCode).toBe(400);
-          expect(res.body.msg).toBe("bad request!");
-        });
-    });
+describe("ERROR TESTING ARTICLES ", () => {
+  test("status:404, /api/ path not found", async () => {
+    const res = await request(app).get("/api/top").expect(404);
+    expect(res.body.msg).toBe("not found!");
   });
-  describe("ERROR TESTING USERS", () => {
-    test("status:404, path not found", () => {
-      return request(app)
-        .get("/api/use")
-        .expect(404)
-        .then((res) => {
-          console.log(res.body);
-          expect(res.body.msg).toBe("path not found!");
-        });
-    });
+  test("status:400, /api/articles/99l99 bad request", async () => {
+    const res = await request(app).get("/api/articles/99l99").expect(400);
+    expect(res.body.msg).toBe("bad request!");
+  });
+  test("status:404, /api/articles/999 responds with a path not found ID DOES NOT EXIST", async () => {
+    const res = await request(app)
+      .patch("/api/articles/999")
+      .send({ inc_votes: 1 })
+      .expect(404);
+    expect(res.statusCode).toBe(404);
+    expect(res.body.msg).toBe("not found!");
+  });
+  test("status:400, /api/articles/someNonsense responds not found as must be integer", async () => {
+    const res = await request(app)
+      .patch("/api/articles/someNonsense")
+      .send({ inc_votes: 1 })
+      .expect(400);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.msg).toBe("bad request!");
+  });
+});
+describe("ERROR TESTING COMMENTS", () => {
+  test("status:400, /api/articles/9/comments should return 400 given an empty object", async () => {
+    const res = await request(app)
+      .post("/api/articles/9/comments")
+      .send({})
+      .expect(400);
+    expect(res.body.msg).toBe("bad request!");
   });
 });
