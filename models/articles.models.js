@@ -5,7 +5,8 @@ exports.newsTopics = async () => {
   const results = await db.query(
     `
     SELECT * 
-    FROM topics;`
+    FROM topics
+    ;`
   );
   return results.rows;
 };
@@ -20,10 +21,11 @@ exports.newsArticles = async (article_id) => {
     JOIN comments 
     ON comments.article_id = articles.article_id
     WHERE articles.article_id = $1
-    GROUP BY articles.article_id;
-    `,
+    GROUP BY articles.article_id
+    ;`,
     [article_id]
   );
+  // QUERY SQL TO BE COMPLETED
   const { rows } = articleSQLreturn;
   return rows;
 };

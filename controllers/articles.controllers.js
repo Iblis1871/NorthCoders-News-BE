@@ -29,13 +29,14 @@ exports.patchArticleById = (req, res, next) => {
   articlesPatch(article_id, req.body)
     .then((articles) => {
       res.status(200).send({ articles });
+      git;
     })
     .catch(next);
 };
 
 exports.getCommentsById = (req, res, next) => {
   const { article_id } = req.params;
-  newsComments(article_id)
+  newsTopics(article_id)
     .then((articles) => {
       res.status(200).json({ articles });
     })

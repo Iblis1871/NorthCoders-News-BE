@@ -2,9 +2,13 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+
+  "WIP Endpoints": {
+    "GET": "GET /api/articles (queries)"
+  },
   "GET /api/topics": {
     "description": "serves an array of all topics",
-    "queries": [],
+    "queries": ["topic"],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
@@ -22,6 +26,88 @@
           "created_at": 1527695953341
         }
       ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an article based on article_id",
+    "queries": ["article_id", "*"],
+    "exampleResponse": {
+      "article": {
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves a selection of comments from an article based on article_id",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "votes": 16,
+          "created_at": 1586179020000,
+          "author": "butter_bridge",
+          "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "updates an articles votes based on article_id",
+    "queries": ["votes", "article_id"],
+    "exampleResponse": {
+      "votes": [
+        {
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": "2020-07-09T20:11:00.000Z",
+          "votes": 101,
+          "article_id": 1
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts new comment to article based on article_id",
+    "queries": ["author", "body", "article_id"],
+    "exampleResponse": {
+      "comment body": [
+        {
+          "author": "butter_bridge",
+          "body": "posting new comment"
+        }
+      ]
+    }
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment based on comment_id",
+    "queries": ["comment_id"],
+    "exampleResponse": {
+      "status response": [
+        {
+          "status": 204,
+          "msg": "no content"
+        }
+      ]
+    }
+  },
+
+  "GET /api/users": {
+    "description": "serves an array of users",
+    "queries": ["users"],
+    "exampleResponse": {
+      "users": {
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      }
     }
   }
 }
