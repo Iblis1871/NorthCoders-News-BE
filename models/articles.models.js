@@ -5,25 +5,31 @@ exports.newsTopics = async () => {
   const results = await db.query(
     `
     SELECT * 
-    FROM topics;`
+    FROM topics
+    ;`
   );
   return results.rows;
 };
-
-exports.newsArticles = async (article_id) => {
+exports.newsArticles = async (
+  article_id,
+  sort_by = "article_id",
+  order_by = "DESC"
+) => {
   const articleSQLreturn = await db.query(
     `
-    SELECT articles.*, 
-    COUNT(comments.comment_id) 
-    AS comment_count 
-    FROM articles 
-    JOIN comments 
+    SELECT  articles.*,
+    COUNT(comments.comment_id)
+    AS comment_count
+    FROM articles
+    JOIN comments
     ON comments.article_id = articles.article_id
     WHERE articles.article_id = $1
-    GROUP BY articles.article_id;
-    `,
+    GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order_by}
+    ;`,
     [article_id]
   );
+  // QUERY SQL STILL TO BE COMPLETED
   const { rows } = articleSQLreturn;
   return rows;
 };

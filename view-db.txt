@@ -1,12 +1,1 @@
 You are now connected to database "nc_news_test" as user "iblis".
-                  List of relations
- Schema |          Name           |   Type   | Owner 
---------+-------------------------+----------+-------
- public | articles                | table    | iblis
- public | articles_article_id_seq | sequence | iblis
- public | comments                | table    | iblis
- public | comments_comment_id_seq | sequence | iblis
- public | topics                  | table    | iblis
- public | users                   | table    | iblis
-(6 rows)
-

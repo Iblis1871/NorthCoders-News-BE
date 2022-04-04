@@ -16,32 +16,94 @@ describe("GET api/topics", () => {
     expect(res.body.topics).toBeInstanceOf(Array);
   });
 });
+describe("GET api/", () => {
+  test("status 200: responds with a JSON of all endpoints and actions", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((result) => {
+        expect(result.body).toBeInstanceOf(Object);
+        expect(result.body["GET /api/articles/:article_id/comments"]).toEqual({
+          description:
+            "serves a selection of comments from an article based on article_id",
+          queries: [
+            "article_id",
+            "comment_id",
+            "votes",
+            "created_at",
+            "author",
+            "body",
+          ],
+          exampleResponse: {
+            comments: [
+              {
+                comment_id: 1,
+                votes: 16,
+                created_at: 1586179020000,
+                author: "butter_bridge",
+                body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+              },
+            ],
+          },
+        });
+      });
+  });
+});
 describe("GET api/articles", () => {
   test("status:200, responds with an article based on article ID", async () => {
-    const res = await request(app).get("/api/articles/1").expect(200);
-    expect(res.body.articles).toBeInstanceOf(Object);
-    expect(res.body.articles.title).toBe("Living in the shadow of a great man");
-    expect(res.body.articles.topic).toBe("mitch");
-    expect(res.body.articles.created_at).toBe("2020-07-09T20:11:00.000Z");
-    expect(res.body.articles.body).toBe("I find this existence challenging");
-    expect(res.body.articles.votes).toBe(100);
+    const { body } = await request(app).get("/api/articles/3").expect(200);
+    expect(body.articles).toBeInstanceOf(Object);
+    const { articles } = body;
+    articles.forEach((result) => {
+      expect(result).toEqual(
+        expect.objectContaining({
+          title: "Eight pug gifs that remind me of mitch",
+          topic: "mitch",
+          body: "some gifs",
+          created_at: "2020-11-03T09:12:00.000Z",
+          votes: 0,
+        })
+      );
+    });
   });
   test("status:200, responds with an article based on article ID + properties from joined table", async () => {
-    const res = await request(app).get("/api/articles/1").expect(200);
-    expect(res.body.articles).toBeInstanceOf(Object);
-    expect(res.body.articles.author).toBe("butter_bridge");
+    const { body } = await request(app).get("/api/articles/1").expect(200);
+    expect(body.articles).toBeInstanceOf(Object);
+    const { articles } = body;
+    articles.forEach((result) => {
+      expect(result).toEqual(
+        expect.objectContaining({
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_id: 1,
+        })
+      );
+    });
   });
   test("status:200, responds with an article and comment count", async () => {
     const { body } = await request(app).get("/api/articles/1").expect(200);
-    expect(body.articles).toEqual({
-      title: "Living in the shadow of a great man",
-      topic: "mitch",
-      author: "butter_bridge",
-      body: "I find this existence challenging",
-      created_at: "2020-07-09T20:11:00.000Z",
-      votes: 100,
-      article_id: 1,
-      comment_count: "11",
+    expect(body.articles).toEqual([
+      {
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 100,
+        article_id: 1,
+        comment_count: "11",
+      },
+    ]);
+  });
+  xtest("status:200, responds with a sorted array", async () => {
+    const { body } = await request(app).get("/api/topics").expect(200);
+    expect(body.articles).toBe({ key: "article_id" });
+    expect(body.articles).toBeSortedBy("article_id", {
+      ascending: false,
     });
   });
 });
