@@ -15,7 +15,16 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": [
+      "author",
+      "topic",
+      "sort_by",
+      "order",
+      "title",
+      "created_at",
+      "body",
+      "votes"
+    ],
     "exampleResponse": {
       "articles": [
         {
@@ -30,7 +39,18 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves an article based on article_id",
-    "queries": ["article_id", "*"],
+    "queries": [
+      "article_id",
+      "author",
+      "title",
+      "topic",
+      "author",
+      "body",
+      "created_at",
+      "votes",
+      "article_id",
+      "comment_count"
+    ],
     "exampleResponse": {
       "article": {
         "title": "Seafood substitutions are increasing",
@@ -43,7 +63,14 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves a selection of comments from an article based on article_id",
-    "queries": ["article_id"],
+    "queries": [
+      "article_id",
+      "comment_id",
+      "votes",
+      "created_at",
+      "author",
+      "body"
+    ],
     "exampleResponse": {
       "comments": [
         {

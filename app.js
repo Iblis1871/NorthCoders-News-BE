@@ -27,9 +27,6 @@ app.delete("/api/comments/:comment_id", deleteComment);
 app.get("/api/users", getUsers);
 ////////////////////////////////////////////////////////////////////
 
-
-
-
 app.use((err, req, res, next) => {
   errors = ["22P02"];
   if (errors.includes(err.code)) {
