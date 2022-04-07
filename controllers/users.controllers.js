@@ -13,6 +13,7 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getUsersByUsername = (req, res, next) => {
+  const { username } = req.params;
   usersByUsername()
     .then((users) => {
       res.status(200).json({ users });

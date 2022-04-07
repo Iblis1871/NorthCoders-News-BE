@@ -10,11 +10,14 @@ exports.usersWithUsername = async () => {
   return results.rows;
 };
 
-exports.usersByUsername = async () => {
+exports.usersByUsername = async (username) => {
   const results = await db.query(
     `
     SELECT * 
-    FROM users;`
+    FROM users
+    WHERE username =$1
+    ;`,
+    [username]
   );
   return results.rows;
 };
