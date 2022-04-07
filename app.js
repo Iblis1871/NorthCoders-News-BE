@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.get("/api", getAPI);
 app.get("/api/topics", getTopics);
-app.get("/api/articles", getArticleById);
+app.get("/api/articles", getAndSortArticles);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsById);
 app.patch("/api/articles/:article_id", patchArticleById);

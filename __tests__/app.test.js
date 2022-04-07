@@ -17,36 +17,32 @@ describe("GET api/topics", () => {
   });
 });
 describe("GET api/", () => {
-  test("status 200: responds with a JSON of all endpoints and actions", () => {
-    return request(app)
-      .get("/api")
-      .expect(200)
-      .then((result) => {
-        expect(result.body).toBeInstanceOf(Object);
-        expect(result.body["GET /api/articles/:article_id/comments"]).toEqual({
-          description:
-            "serves a selection of comments from an article based on article_id",
-          queries: [
-            "article_id",
-            "comment_id",
-            "votes",
-            "created_at",
-            "author",
-            "body",
-          ],
-          exampleResponse: {
-            comments: [
-              {
-                comment_id: 1,
-                votes: 16,
-                created_at: 1586179020000,
-                author: "butter_bridge",
-                body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-              },
-            ],
+  test("status 200: responds with a JSON of all endpoints and actions", async () => {
+    const result = await request(app).get("/api").expect(200);
+    expect(result.body).toBeInstanceOf(Object);
+    expect(result.body["GET /api/articles/:article_id/comments"]).toEqual({
+      description:
+        "serves a selection of comments from an article based on article_id",
+      queries: [
+        "article_id",
+        "comment_id",
+        "votes",
+        "created_at",
+        "author",
+        "body",
+      ],
+      exampleResponse: {
+        comments: [
+          {
+            comment_id: 1,
+            votes: 16,
+            created_at: 1586179020000,
+            author: "butter_bridge",
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
           },
-        });
-      });
+        ],
+      },
+    });
   });
 });
 describe("GET api/articles", () => {
@@ -99,11 +95,31 @@ describe("GET api/articles", () => {
       },
     ]);
   });
-  xtest("status:200, responds with a sorted array", async () => {
-    const { body } = await request(app).get("/api/topics").expect(200);
-    expect(body.articles).toBe({ key: "article_id" });
-    expect(body.articles).toBeSortedBy("article_id", {
-      ascending: false,
+  test("statis:200, responds with articles sorted by date", async () => {
+    const res = await request(app).get("/api/articles").expect(200);
+    for (let i = 0; i < res.body.articles.length - 1; i++) {
+      expect(
+        new Date(res.body.articles[i].created_at).getTime()
+      ).toBeGreaterThanOrEqual(
+        new Date(res.body.articles[i + 1].created_at).getTime()
+      );
+    }
+  });
+  test("status:200, responds with articles sorted by votes", async () => {
+    const res = await request(app)
+      .get("/api/articles?sort_by=votes&order=asc")
+      .expect(200);
+    for (let i = 0; i < res.body.articles.length - 1; i++) {
+      expect(res.body.articles[i].votes).toBeLessThanOrEqual(
+        res.body.articles[i + 1].votes
+      );
+    }
+  });
+
+  test("status:200, responds with articles matching query topic", async () => {
+    const res = await request(app).get("/api/articles?topic=cats").expect(200);
+    res.body.articles.forEach((article) => {
+      expect(article.topic).toBe("cats");
     });
   });
 });
@@ -201,21 +217,17 @@ describe("GET api/users", () => {
         });
       });
   });
-  test("status:200, responds an array of users with usernames FOR EACH", () => {
-    return request(app)
-      .get("/api/users")
-      .expect(200)
-      .then((response) => {
-        response.body.users.forEach((object) => {
-          expect(object).toEqual(
-            expect.objectContaining({
-              username: expect.any(String),
-              name: expect.any(String),
-              avatar_url: expect.any(String),
-            })
-          );
-        });
-      });
+  test("status:200, responds an array of users with usernames FOR EACH", async () => {
+    const response = await request(app).get("/api/users").expect(200);
+    response.body.users.forEach((object) => {
+      expect(object).toEqual(
+        expect.objectContaining({
+          username: expect.any(String),
+          name: expect.any(String),
+          avatar_url: expect.any(String),
+        })
+      );
+    });
   });
 });
 ////////ERRORS///////////////////////////////////////////////////////
@@ -246,6 +258,10 @@ describe("ERROR TESTING ARTICLES ", () => {
       .expect(400);
     expect(res.statusCode).toBe(400);
     expect(res.body.msg).toBe("bad request!");
+  });
+  test("status:404, /api/articles?topic=dogs responds with not found", async () => {
+    const res = await request(app).get("/api/articles?topic=dogs").expect(404);
+    expect(res.body.msg).toBe("not found!");
   });
 });
 describe("ERROR TESTING COMMENTS", () => {

@@ -2,7 +2,7 @@ const {
   newsTopics,
   newsArticles,
   articlesPatch,
-  sortedNewsArticles,
+  sortArticles,
 } = require("../models/articles.models");
 
 exports.getTopics = (req, res, next) => {
@@ -20,6 +20,16 @@ exports.getArticleById = (req, res, next) => {
       if (article_id.length === 0) {
         res.status(400).send();
       }
+      res.status(200).send({ articles });
+    })
+    .catch(next);
+};
+
+exports.getAndSortArticles = (req, res, next) => {
+  const { article_id } = req.params;
+  const { sort_by, order, topic } = req.query;
+  sortArticles(article_id, sort_by, order, topic)
+    .then((articles) => {
       res.status(200).send({ articles });
     })
     .catch(next);
