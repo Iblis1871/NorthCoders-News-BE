@@ -229,6 +229,16 @@ describe("GET api/users", () => {
       );
     });
   });
+  xtest("status:200, responds with a user based on given username", async () => {
+    const response = await request(app)
+      .get("/api/users/butter_bridge")
+      .expect(200);
+    response.body.users.forEach((object) => {
+      expect(object).toEqual(
+        expect(response.body.username).toBe("butter_bridge")
+      );
+    });
+  });
 });
 ////////ERRORS///////////////////////////////////////////////////////
 ///////////////////////////ERRORS////////////////////////////////////

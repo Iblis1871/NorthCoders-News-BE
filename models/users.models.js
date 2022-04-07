@@ -9,3 +9,12 @@ exports.usersWithUsername = async () => {
   );
   return results.rows;
 };
+
+exports.usersByUsername = async () => {
+  const results = await db.query(
+    `
+    SELECT * 
+    FROM users;`
+  );
+  return results.rows;
+};
