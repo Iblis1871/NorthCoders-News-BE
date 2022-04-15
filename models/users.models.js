@@ -19,5 +19,6 @@ exports.usersByUsername = async (username) => {
     ;`,
     [username]
   );
+  console.log(username);
   return results.rows;
 };
