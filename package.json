@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "bc-nc-news",
   "main": "index.js",
-  "start": "node listen.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
+    "start": "node listen.js",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest --detectOpenHandles",
     "prepare": "husky install",
