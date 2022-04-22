@@ -15,9 +15,9 @@ exports.getTopics = (req, res, next) => {
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
-  newsArticles(article_id, res.body)
+  newsArticles(article_id)
     .then((articles) => {
-      if (article_id.length === 0) {
+      if (!article_id) {
         res.status(400).send();
       }
       res.status(200).send({ articles });
